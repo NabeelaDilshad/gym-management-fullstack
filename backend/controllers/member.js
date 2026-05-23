@@ -62,9 +62,9 @@ export const createMember = async (req, res) => {
 // UPDATE
 export const updateMember = async (req, res) => {
   try {
-    const { user_name, email, phone, address, age , status } = req.body;
+    const { user_name, email, phone, address, age , status , health_issue, join_date, } = req.body;
 
-    await updateMemberModel(req.params.id, user_name, email, phone, address, age , status);
+    await updateMemberModel(req.params.id, user_name, email, phone, address, age , status ,health_issue , join_date);
 
     res.json({ message: "Member updated successfully" });
   } catch (err) {

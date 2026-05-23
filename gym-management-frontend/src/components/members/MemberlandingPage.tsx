@@ -39,6 +39,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
+import { formatDate , formatInputDate} from "@/utils/dateformat";
+
 
 type Member = {
   id: number;
@@ -73,6 +75,8 @@ type AddMember = {
 export function MemberLandingPage() {
   const [members, setMembers] = useState([]);
   const [open, setOpen] = useState(false);
+  const [isEditMode, setEditMode] = useState(false);
+    const [currentUser, setcurrentUser] = useState(null);
   const [mform, msetForm] = useState<AddMember>({
     user_name: "",
     email: "",
@@ -233,19 +237,30 @@ export function MemberLandingPage() {
 
     const hasErrors = Object.values(errors).some(Boolean);
     if (hasErrors) return;
+    if (isEditMode) {
+      const res = await fetch(`http://localhost:3000/api/members/${currentUser.id}`,{
+          method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(mform),
+      })
+    } else {
+      const res = await fetch("http://localhost:3000/api/members", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(mform),
+      });
+      const userData = await res.json();
+      // console.log("userData", userData);
+    }
 
-    const res = await fetch("http://localhost:3000/api/members", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(mform),
-    });
-    const userData = await res.json();
-    // console.log("userData", userData);
     setOpen(false);
-    resetForm()
-    resetErrors()
+    resetForm();
+    resetErrors();
+    setEditMode(false);
     fetchUsers();
   };
 
@@ -254,6 +269,37 @@ export function MemberLandingPage() {
     resetForm();
     resetErrors();
   };
+
+  const deleteMember = async (id: number) => {
+    const res = await fetch(`http://localhost:3000/api/members/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const userData = await res.json();
+    console.log(userData);
+    fetchUsers();
+  };
+
+  const editUser = (item: AddMember) => {
+    openDialog();
+    setEditMode(true);
+    msetForm({
+      user_name: item.user_name,
+      email: item.email,
+      phone: item.phone,
+      age: item.age,
+      address: item.address,
+      health_issue: item.health_issue,
+      status: item.status,
+      join_date: formatInputDate(item.join_date),
+      emergency_contact: item.emergency_contact,
+    });
+    console.log(formatDate(item.join_date));
+   setcurrentUser(item);
+  };
+
 
   return (
     <>
@@ -465,7 +511,7 @@ export function MemberLandingPage() {
                   <TableCell>{item.phone}</TableCell>
                   <TableCell>{item.age}</TableCell>
                   <TableCell>{item.status}</TableCell>
-                  <TableCell>{item.join_date}</TableCell>
+                  <TableCell>{formatDate(item.join_date,"long")}</TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -475,9 +521,14 @@ export function MemberLandingPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => editUser(item)}>
+                          Edit
+                        </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem variant="destructive">
+                        <DropdownMenuItem
+                          variant="destructive"
+                          onClick={() => deleteMember(item.id)}
+                        >
                           Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>
