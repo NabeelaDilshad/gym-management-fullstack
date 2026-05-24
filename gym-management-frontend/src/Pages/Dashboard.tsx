@@ -1,4 +1,5 @@
-import { MemberLandingPage } from "@/components/members/MemberlandingPage";
+import { Outlet } from "react-router-dom";
+
 import Navbar from "./Navbar";
 
 function Dashboard() {
@@ -7,7 +8,8 @@ function Dashboard() {
     <>
       <Navbar/>
       <div className="mt-2"></div>
-      <MemberLandingPage/>
+      <Outlet/>
+  
     </>
   );
 }

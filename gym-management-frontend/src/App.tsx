@@ -4,6 +4,9 @@ import Login from "./Pages/Login";
 import SignUp from "./Pages/SignUp";
 import Dashboard from "./Pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { MemberLandingPage } from "./components/members/MemberlandingPage";
+import FeeslandingPage from "./components/fees/feesLandingPage";
+// import AttendancelandingPage from "./components/attandance/AttendancelandingPage";
 
 function App() {
   const isAuthenticated = localStorage.getItem("user");
@@ -22,7 +25,7 @@ function App() {
           element={!isAuthenticated ? <SignUp /> : <Navigate to="/dashboard" />}
         />
 
-        {/* Protected Route */}
+        {/* Protected Nested Routes */}
         <Route
           path="/dashboard"
           element={
@@ -30,8 +33,11 @@ function App() {
               <Dashboard />
             </ProtectedRoute>
           }
-        />
-
+        >
+          <Route index={true} element={<MemberLandingPage />} />
+          <Route path="fees" element={<FeeslandingPage />} />
+          {/* <Route path= "attendance" element={<AttendancelandingPage/>} */}
+        </Route>
         {/* Default Route */}
         <Route
           path="/"
