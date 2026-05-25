@@ -39,8 +39,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
-import { formatDate , formatInputDate} from "@/utils/dateformat";
-
+import { formatDate,formatInputDate } from "@/utils/dateformat";
 
 type Member = {
   id: number;
@@ -100,9 +99,15 @@ export function MemberLandingPage() {
   });
 
   async function fetchUsers() {
-    const response = await fetch("http://localhost:3000/api/members");
-    const data = await response.json();
-    setMembers(data);
+    const response = await fetch("http://localhost:3000/api/members",{
+      method:"GET",
+      headers:{
+         "Content-Type": "application/json",
+           Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+      const data = await response.json();
+      setMembers(data);
   }
 
   useEffect(() => {
@@ -242,6 +247,7 @@ export function MemberLandingPage() {
           method: "PUT",
         headers: {
           "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`
         },
         body: JSON.stringify(mform),
       })
@@ -250,6 +256,7 @@ export function MemberLandingPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`
         },
         body: JSON.stringify(mform),
       });
@@ -257,11 +264,11 @@ export function MemberLandingPage() {
       // console.log("userData", userData);
     }
 
-    setOpen(false);
-    resetForm();
-    resetErrors();
+      setOpen(false);
+      resetForm();
+      resetErrors();
     setEditMode(false);
-    fetchUsers();
+      fetchUsers();
   };
 
   const openDialog = () => {
@@ -275,6 +282,7 @@ export function MemberLandingPage() {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
       },
     });
     const userData = await res.json();

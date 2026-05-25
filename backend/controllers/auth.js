@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
-import { findUserByEmail, createUser } from "../models/auth.js";
+import crypto from "crypto";
+import { findUserByEmail, createUser ,setUserSession} from "../models/auth.js";
 
 // SIGNUP
 export const signup = async (req, res) => {
@@ -53,7 +54,8 @@ export const login = async (req, res) => {
         message: "Invalid password",
       });
     }
-
+  const sessionId = crypto.randomBytes(32).toString("hex");
+    await setUserSession(user.id, sessionId);
     res.json({
       success: true,
       message: "Login successful",
@@ -61,6 +63,7 @@ export const login = async (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
+        sessionId: sessionId,
       },
     });
 

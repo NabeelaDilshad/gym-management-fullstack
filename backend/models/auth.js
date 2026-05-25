@@ -16,3 +16,11 @@ export const createUser = async (username, email, password) => {
   );
   return result.rows[0];
 };
+
+
+export const setUserSession = async (userId, sessionId) => {
+  await pool.query(
+    "UPDATE users SET session_id = $1 WHERE id = $2",
+    [sessionId, userId]
+  );
+}

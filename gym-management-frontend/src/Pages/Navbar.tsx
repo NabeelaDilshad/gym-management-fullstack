@@ -8,12 +8,13 @@ import {
   MenuItems,
 } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
+
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", current: true },
   { name: "Fees", href: "/dashboard/fees", current: false },
-  { name: "Attendance", href: "/dashboard/fees", current: false },
+  { name: "Attendance", href: "/dashboard/attendance", current: false },
   { name: "Report", href: "/dashboard/report", current: false },
 ];
 
@@ -22,6 +23,13 @@ function classNames(...classes: string[]) {
 }
 
 export default function Navbar() {
+
+  const navigate = useNavigate();
+   const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
     <Disclosure
       as="nav"
@@ -60,7 +68,7 @@ export default function Navbar() {
                     to={item.href}
                     aria-current={item.current ? "page" : undefined}
                     className={classNames(
-                      item.currents
+                      item.current
                         ? "bg-gray-950/50 text-white"
                         : "text-gray-300 hover:bg-white/5 hover:text-white",
                       "rounded-md px-3 py-2 text-sm font-medium",
@@ -115,12 +123,13 @@ export default function Navbar() {
                   </a>
                 </MenuItem>
                 <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-300 data-focus:bg-white/5 data-focus:outline-hidden"
+                <button
+                    onClick={handleLogout}
+                    className="block px-4 py-2 text-sm text-gray-300"
                   >
                     Sign out
-                  </a>
+                  </button>
+
                 </MenuItem>
               </MenuItems>
             </Menu>

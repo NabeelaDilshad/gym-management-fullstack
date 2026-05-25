@@ -44,8 +44,8 @@ function SignUp() {
       theme: "light",
     });
 
-    // 🔑 token save karo
-    localStorage.setItem("user", JSON.stringify(data.data));
+     // 🔑 token save karo
+ localStorage.setItem("token", data.data.sessionId);
     
     // 🚀 navigate
     navigate("/dashboard");

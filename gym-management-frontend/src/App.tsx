@@ -6,10 +6,10 @@ import Dashboard from "./Pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { MemberLandingPage } from "./components/members/MemberlandingPage";
 import FeeslandingPage from "./components/fees/feesLandingPage";
-// import AttendancelandingPage from "./components/attandance/AttendancelandingPage";
+import { AttendancelandingPage } from "./components/attandance/AttendancelandingPage";
 
 function App() {
-  const isAuthenticated = localStorage.getItem("user");
+  const isAuthenticated = localStorage.getItem("token");
 
   return (
     <BrowserRouter>
@@ -36,7 +36,7 @@ function App() {
         >
           <Route index={true} element={<MemberLandingPage />} />
           <Route path="fees" element={<FeeslandingPage />} />
-          {/* <Route path= "attendance" element={<AttendancelandingPage/>} */}
+          <Route path= "attendance" element={<AttendancelandingPage/>}/>
         </Route>
         {/* Default Route */}
         <Route
